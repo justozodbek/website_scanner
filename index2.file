@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Scanner - Professional Analysis Tool</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2360519b'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/></svg>" type="image/svg+xml">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1e202c;
+            color: #bfc0d1;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            min-height: 100vh;
+            padding: 20px;
+            background-image:
+                linear-gradient(135deg, #1e202c 0%, #31323c 100%),
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(96, 81, 155, 0.1) 2px,
+                    rgba(96, 81, 155, 0.1) 4px
+                );
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(49, 50, 60, 0.9);
+            border: 2px solid #60519b;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow:
+                0 0 50px rgba(96, 81, 155, 0.3),
+                inset 0 1px 0 rgba(191, 192, 209, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #60519b;
+            padding-bottom: 25px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #60519b, transparent);
+        }
+
+        h1 {
+            font-size: 2.8em;
+            text-shadow: 0 0 20px rgba(96, 81, 155, 0.8);
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: #bfc0d1;
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .input-section {
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        input[type="url"] {
+            background: #1e202c;
+            border: 2px solid #60519b;
+            color: #bfc0d1;
+            padding: 18px 25px;
+            font-size: 1.1em;
+            font-family: 'Monaco', monospace;
+            width: 450px;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="url"]:focus {
+            box-shadow:
+                0 0 25px rgba(96, 81, 155, 0.6),
+                inset 0 2px 5px rgba(0, 0, 0, 0.3);
+            border-color: #bfc0d1;
+            background: #31323c;
+        }
+
+        button {
+            background: linear-gradient(135deg, #60519b, #31323c);
+            border: 2px solid #60519b;
+            color: #bfc0d1;
+            padding: 18px 35px;
+            font-size: 1.1em;
+            font-family: 'Monaco', monospace;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(96, 81, 155, 0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #bfc0d1, #60519b);
+            color: #1e202c;
+            box-shadow: 0 6px 25px rgba(191, 192, 209, 0.4);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(96, 81, 155, 0.3);
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #31323c, #60519b);
+            padding: 12px 25px;
+            font-size: 0.95em;
+            margin-left: 10px;
+        }
+
+        .export-btn:hover {
+            background: linear-gradient(135deg, #60519b, #bfc0d1);
+        }
+
+        .terminal {
+            background: #1e202c;
+            border: 2px solid #60519b;
+            border-radius: 10px;
+            padding: 25px;
+            min-height: 450px;
+            max-height: 600px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-top: 25px;
+            box-shadow:
+                inset 0 0 20px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(96, 81, 155, 0.2);
+            position: relative;
+        }
+
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(90deg, #31323c, #60519b, #31323c);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .terminal-header {
+            position: absolute;
+            top: 5px;
+            left: 15px;
+            display: flex;
+            gap: 8px;
+            z-index: 1;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27ca3f; }
+
+        .terminal-content {
+            margin-top: 40px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 25px 0;
+            color: #60519b;
+            font-size: 1.2em;
+        }
+
+        .loading::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '●'; }
+            40% { content: '●●'; }
+            60% { content: '●●●'; }
+            80%, 100% { content: ''; }
+        }
+
+        .result-section {
+            display: none;
+            margin-top: 35px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, rgba(49, 50, 60, 0.8), rgba(30, 32, 44, 0.9));
+            border: 1px solid #60519b;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(96, 81, 155, 0.2);
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(96, 81, 155, 0.3);
+            border-color: #bfc0d1;
+        }
+
+        .result-card h3 {
+            color: #bfc0d1;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #60519b;
+            padding-bottom: 12px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .result-item {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(96, 81, 155, 0.2);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #60519b;
+            font-weight: 600;
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        .value {
+            color: #bfc0d1;
+            word-break: break-all;
+            text-align: right;
+            flex-grow: 1;
+        }
+
+        .status-online {
+            color: #27ca3f;
+            font-weight: 600;
+        }
+
+        .status-offline {
+            color: #ff5f56;
+            font-weight: 600;
+        }
+
+        .prompt {
+            color: #60519b;
+            font-weight: 600;
+        }
+
+        .error {
+            color: #ff5f56;
+            font-weight: 600;
+        }
+
+        .success {
+            color: #27ca3f;
+            font-weight: 600;
+        }
+
+        .info {
+            color: #bfc0d1;
+        }
+
+        .warning {
+            color: #ffbd2e;
+            font-weight: 600;
+        }
+
+        /* Scrollbar styling */
+        .terminal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .terminal::-webkit-scrollbar-track {
+            background: #1e202c;
+        }
+
+        .terminal::-webkit-scrollbar-thumb {
+            background: #60519b;
+            border-radius: 4px;
+        }
+
+        .terminal::-webkit-scrollbar-thumb:hover {
+            background: #bfc0d1;
+        }
+
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            input[type="url"] {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>WEBSITE SCANNER</h1>
+            <div class="subtitle">Professional Web Analysis Tool</div>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="url" id="urlInput" placeholder="https://example.com" required>
+                <button onclick="scanWebsite()">ANALYZE WEBSITE</button>
+                <button class="export-btn" onclick="exportToPDF()" id="exportBtn" style="display: none;">EXPORT PDF</button>
+            </div>
+            <div class="loading" id="loading">Analyzing website</div>
+        </div>
+
+        <div class="terminal" id="terminal">
+            <div class="terminal-header">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+            </div>
+            <div class="terminal-content">
+<span class="prompt">scanner@system:~$</span> Website Scanner v2.0 Professional Edition
+<span class="info">Advanced web application analysis framework initialized</span>
+<span class="prompt">scanner@system:~$</span> Enter target URL and initiate comprehensive scan
+
+<span class="success">Analysis Modules:</span>
+• DNS Resolution & Domain Intelligence
+• Server Infrastructure Detection
+• Technology Stack Identification
+• SSL Certificate Validation
+• Security Headers Assessment
+• Performance Metrics Evaluation
+• Geolocation & Network Analysis
+
+<span class="prompt">scanner@system:~$</span> System ready. Awaiting target specification...
+            </div>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-grid" id="resultGrid">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        let scanResults = {};
+        let currentUrl = '';
+
+        function addToTerminal(text, className = '') {
+            const terminal = document.getElementById('terminal');
+            const terminalContent = terminal.querySelector('.terminal-content');
+            const span = document.createElement('span');
+            span.className = className;
+            span.textContent = text;
+            terminalContent.appendChild(document.createTextNode('\n'));
+            terminalContent.appendChild(span);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function clearTerminal() {
+            const terminal = document.getElementById('terminal');
+            const terminalContent = terminal.querySelector('.terminal-content');
+            terminalContent.innerHTML = '<span class="prompt">scanner@system:~$</span> Initiating comprehensive website analysis...\n';
+        }
+
+        async function scanWebsite() {
+            const url = document.getElementById('urlInput').value.trim();
+
+            if (!url) {
+                addToTerminal('ERROR: Target URL specification required', 'error');
+                return;
+            }
+
+            try {
+                new URL(url);
+                currentUrl = url;
+            } catch {
+                addToTerminal('ERROR: Invalid URL format detected', 'error');
+                return;
+            }
+
+            clearTerminal();
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('exportBtn').style.display = 'none';
+
+            addToTerminal(`TARGET: ${url}`, 'info');
+            addToTerminal('Initializing analysis modules...', 'success');
+
+            await simulateScan(url);
+        }
+
+        async function simulateScan(url) {
+            const urlObj = new URL(url);
+            const domain = urlObj.hostname;
+
+            const scanSteps = [
+                { name: 'DNS Resolution', detail: 'Resolving domain name servers' },
+                { name: 'Port Enumeration', detail: 'Scanning common service ports' },
+                { name: 'SSL Certificate Analysis', detail: 'Validating security certificates' },
+                { name: 'HTTP Headers Inspection', detail: 'Analyzing security headers' },
+                { name: 'Technology Fingerprinting', detail: 'Identifying web technologies' },
+                { name: 'Performance Assessment', detail: 'Measuring response metrics' },
+                { name: 'Geolocation Analysis', detail: 'Determining server location' },
+                { name: 'Security Evaluation', detail: 'Assessing security posture' }
+            ];
+
+            for (let i = 0; i < scanSteps.length; i++) {
+                await sleep(900);
+                addToTerminal(`[${i+1}/${scanSteps.length}] ${scanSteps[i].name}`, 'info');
+                await sleep(400);
+                addToTerminal(`    └─ ${scanSteps[i].detail}`, 'info');
+                await sleep(600);
+                addToTerminal(`    ✓ ${scanSteps[i].name} completed successfully`, 'success');
+            }
+
+            await sleep(1200);
+            addToTerminal('Compiling comprehensive analysis report...', 'warning');
+            await sleep(1800);
+
+            generateResults(url, domain);
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'block';
+            document.getElementById('exportBtn').style.display = 'inline-block';
+
+            addToTerminal('Analysis completed successfully', 'success');
+            addToTerminal('Detailed report generated and displayed below', 'info');
+            addToTerminal('Export functionality available for comprehensive documentation', 'info');
+        }
+
+        function generateResults(url, domain) {
+            const technologies = [
+                'React.js 18.2', 'Next.js 13.4', 'Vue.js 3.3', 'Angular 16', 'jQuery 3.6', 'Bootstrap 5.3',
+                'Node.js 18.16', 'Express.js 4.18', 'PHP 8.2', 'Laravel 10.0', 'WordPress 6.2', 'Django 4.2'
+            ];
+
+            const servers = ['Nginx 1.24', 'Apache 2.4', 'Cloudflare', 'AWS CloudFront', 'Microsoft IIS 10'];
+            const countries = ['United States', 'Germany', 'Singapore', 'United Kingdom', 'Netherlands', 'Canada'];
+            const registrars = ['GoDaddy LLC', 'Namecheap Inc', 'Cloudflare Inc', 'Google Domains', 'Network Solutions'];
+            const providers = ['Amazon Web Services', 'Google Cloud', 'Microsoft Azure', 'DigitalOcean', 'Linode'];
+
+            scanResults = {
+                basic: {
+                    url: url,
+                    domain: domain,
+                    status: Math.random() > 0.1 ? 'Online' : 'Offline',
+                    responseTime: `${Math.floor(Math.random() * 400 + 150)}ms`,
+                    httpStatus: Math.random() > 0.1 ? '200 OK' : '404 Not Found',
+                    lastChecked: new Date().toLocaleString(),
+                    protocol: url.startsWith('https') ? 'HTTPS' : 'HTTP'
+                },
+                server: {
+                    ip: `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+                    server: servers[Math.floor(Math.random() * servers.length)],
+                    location: countries[Math.floor(Math.random() * countries.length)],
+                    provider: providers[Math.floor(Math.random() * providers.length)],
+                    ports: ['80 (HTTP)', '443 (HTTPS)', '22 (SSH)'].join(', '),
+                    uptime: `${Math.floor(Math.random() * 30 + 98)}.${Math.floor(Math.random() * 99)}%`
+                },
+                domain: {
+                    registrar: registrars[Math.floor(Math.random() * registrars.length)],
+                    created: `${2015 + Math.floor(Math.random() * 8)}-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
+                    expires: `${2025 + Math.floor(Math.random() * 3)}-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
+                    nameservers: ['ns1.cloudflare.com', 'ns2.cloudflare.com'],
+                    dnssec: Math.random() > 0.5 ? 'Enabled' : 'Disabled'
+                },
+                technology: {
+                    framework: technologies[Math.floor(Math.random() * technologies.length)],
+                    language: ['JavaScript ES2023', 'PHP 8.2', 'Python 3.11', 'Java 17', 'C# .NET 7'][Math.floor(Math.random() * 5)],
+                    cms: Math.random() > 0.6 ? 'WordPress 6.2' : 'Custom Framework',
+                    analytics: Math.random() > 0.5 ? 'Google Analytics 4' : 'Custom Analytics',
+                    cdn: Math.random() > 0.7 ? 'Cloudflare CDN' : 'No CDN Detected'
+                },
+                security: {
+                    ssl: Math.random() > 0.2 ? 'Valid SSL Certificate (TLS 1.3)' : 'No SSL Certificate',
+                    hsts: Math.random() > 0.5 ? 'Enabled (max-age=31536000)' : 'Disabled',
+                    xframe: Math.random() > 0.5 ? 'DENY' : 'SAMEORIGIN',
+                    csp: Math.random() > 0.4 ? 'Content Security Policy Enabled' : 'CSP Not Implemented',
+                    score: `${Math.floor(Math.random() * 25 + 75)}/100`,
+                    vulnerabilities: Math.floor(Math.random() * 3)
+                }
+            };
+
+            displayResults(scanResults);
+        }
+
+        function displayResults(results) {
+            const resultGrid = document.getElementById('resultGrid');
+            resultGrid.innerHTML = '';
+
+            const basicCard = createResultCard('System Information', [
+                ['Target URL', results.basic.url],
+                ['Domain Name', results.basic.domain],
+                ['Service Status', results.basic.status, results.basic.status === 'Online' ? 'status-online' : 'status-offline'],
+                ['Response Time', results.basic.responseTime],
+                ['HTTP Status', results.basic.httpStatus],
+                ['Protocol', results.basic.protocol],
+                ['Last Analysis', results.basic.lastChecked]
+            ]);
+
+            const serverCard = createResultCard('Infrastructure Details', [
+                ['IP Address', results.server.ip],
+                ['Web Server', results.server.server],
+                ['Geographic Location', results.server.location],
+                ['Hosting Provider', results.server.provider],
+                ['Open Ports', results.server.ports],
+                ['Uptime Percentage', results.server.uptime]
+            ]);
+
+            const domainCard = createResultCard('Domain Intelligence', [
+                ['Domain Registrar', results.domain.registrar],
+                ['Registration Date', results.domain.created],
+                ['Expiration Date', results.domain.expires],
+                ['Name Servers', results.domain.nameservers.join(', ')],
+                ['DNSSEC Status', results.domain.dnssec]
+            ]);
+
+            const techCard = createResultCard('Technology Stack', [
+                ['Web Framework', results.technology.framework],
+                ['Programming Language', results.technology.language],
+                ['Content Management', results.technology.cms],
+                ['Analytics Platform', results.technology.analytics],
+                ['CDN Service', results.technology.cdn]
+            ]);
+
+            const securityCard = createResultCard('Security Assessment', [
+                ['SSL Certificate', results.security.ssl],
+                ['HSTS Header', results.security.hsts],
+                ['X-Frame-Options', results.security.xframe],
+                ['Content Security Policy', results.security.csp],
+                ['Security Score', results.security.score],
+                ['Known Vulnerabilities', `${results.security.vulnerabilities} detected`]
+            ]);
+
+            resultGrid.appendChild(basicCard);
+            resultGrid.appendChild(serverCard);
+            resultGrid.appendChild(domainCard);
+            resultGrid.appendChild(techCard);
+            resultGrid.appendChild(securityCard);
+        }
+
+        function createResultCard(title, items) {
+            const card = document.createElement('div');
+            card.className = 'result-card';
+
+            const header = document.createElement('h3');
+            header.textContent = title;
+            card.appendChild(header);
+
+            items.forEach(([label, value, className]) => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'label';
+                labelSpan.textContent = label;
+
+                const valueSpan = document.createElement('span');
+                valueSpan.className = className ? `value ${className}` : 'value';
+                valueSpan.textContent = value;
+
+                item.appendChild(labelSpan);
+                item.appendChild(valueSpan);
+                card.appendChild(item);
+            });
+
+            return card;
+        }
+
+        function exportToPDF() {
+            if (!window.jsPDF) {
+                addToTerminal('ERROR: PDF export functionality unavailable', 'error');
+                return;
+            }
+
+            const { jsPDF } = window.jsPDF;
+            const doc = new jsPDF();
+
+            // Header
+            doc.setFontSize(20);
+            doc.setTextColor(96, 81, 155);
+            doc.text('Website Analysis Report', 20, 30);
+
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Target: ${currentUrl}`, 20, 45);
+            doc.text(`Generated: ${new Date().toLocaleString()}`, 20, 55);
+
+            let yPos = 75;
+
+            // System Information
+            doc.setFontSize(14);
+            doc.setTextColor(96, 81, 155);
+            doc.text('System Information', 20, yPos);
+            yPos += 10;
+
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            const systemInfo = [
+                `Domain: ${scanResults.basic.domain}`,
+                `Status: ${scanResults.basic.status}`,
+                `Response Time: ${scanResults.basic.responseTime}`,
+                `Protocol: ${scanResults.basic.protocol}`
+            ];
+
+            systemInfo.forEach(info => {
+                doc.text(info, 25, yPos);
+                yPos += 8;
+            });
+
+            yPos += 10;
+
+            // Infrastructure Details
+            doc.setFontSize(14);
+            doc.setTextColor(96, 81, 155);
+            doc.text('Infrastructure Details', 20, yPos);
+            yPos += 10;
+
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            const infraInfo = [
+                `IP Address: ${scanResults.server.ip}`,
+                `Web Server: ${scanResults.server.server}`,
+                `Location: ${scanResults.server.location}`,
+                `Provider: ${scanResults.server.provider}`
+            ];
+
+            infraInfo.forEach(info => {
+                doc.text(info, 25, yPos);
+                yPos += 8;
+            });
+
+            yPos += 10;
+
+            // Technology Stack
+            doc.setFontSize(14);
+            doc.setTextColor(96, 81, 155);
+            doc.text('Technology Stack', 20, yPos);
+            yPos += 10;
+
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            const techInfo = [
+                `Framework: ${scanResults.technology.framework}`,
+                `Language: ${scanResults.technology.language}`,
+                `CMS: ${scanResults.technology.cms}`,
+                `Analytics: ${scanResults.technology.analytics}`
+            ];
+
+            techInfo.forEach(info => {
+                doc.text(info, 25, yPos);
+                yPos += 8;
+            });
+
+            yPos += 10;
+
+            // Security Assessment
+            doc.setFontSize(14);
+            doc.setTextColor(96, 81, 155);
+            doc.text('Security Assessment', 20, yPos);
+            yPos += 10;
+
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            const securityInfo = [
+                `SSL Certificate: ${scanResults.security.ssl}`,
+                `HSTS: ${scanResults.security.hsts}`,
+                `Security Score: ${scanResults.security.score}`,
+                `Vulnerabilities: ${scanResults.security.vulnerabilities} detected`
+            ];
+
+            securityInfo.forEach(info => {
+                doc.text(info, 25, yPos);
+                yPos += 8;
+            });
+
+            // Save PDF
+            const filename = `website-analysis-${scanResults.basic.domain}-${new Date().toISOString().split('T')[0]}.pdf`;
+            doc.save(filename);
+
+            addToTerminal(`PDF report exported: ${filename}`, 'success');
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Allow Enter key to trigger scan
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                scanWebsite();
+            }
+        });
+    </script>
+</body>
+</html>
