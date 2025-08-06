@@ -18,7 +18,6 @@ Professional websayt tahlil va skanerlash vositasi. Light rejimda. Saytlarni xav
 
 ## 📱 Aloqa
 Agar savollar bo'lsa yoki takliflar bo'lsa, bog'laning:
-- ✉️ Email: example@example.com
 - 📱 Telegram: [@justozodbek](https://t.me/justozodbek)
 
 ---
