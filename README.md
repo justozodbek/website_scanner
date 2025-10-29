@@ -1,24 +1,26 @@
-# 🛡️ WebSite Scanner Light
+# 🌐 Project Name
 
-Professional websayt tahlil va skanerlash vositasi. Light rejimda. Saytlarni xavfsizlik, performance va texnologik jihatdan tekshiring.
+![Banner](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdW1tcnNnZXNpbjVycDVqeWJ1NHRoZmhkM2FicDFuY2FnNXVrMnMxNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OGCXiouwTpgVJok2s5/giphy.gif)
 
-## ✨ Asosiy xususiyatlar
-- 🌐 Domen ma'lumotlari tahlili (registrar, ro'yxat sanasi, amal qilish muddati)
-- 🖥️ Server ma'lumotlari (IP, joylashuv, hosting provayder)
-- 🔍 Ishla tilgan texnologiyalar (CMS, frameworklar, kutubxonalar)
-- 🔒 Xavfsizlik holati (SSL, zaifliklar, antivirus tekshiruvi)
-- ⚡ Performance metrikalari (yuklanish vaqti, sahifa hajmi)
-
-## 🛠️ Ish jarayoni
-1. 🔗 Sayt URL manzilini kiriting
-2. 🔎 "Saytni Skanerlash" tugmasini bosing
-3. ⏳ Natijalarni kutib turing (2-3 daqiqa)
-4. 📊 To'liq tahlil natijalarini ko'ring
-5. 📥 PDF formatida yuklab oling
-
-## 📱 Aloqa
-Agar savollar bo'lsa yoki takliflar bo'lsa, bog'laning:
-- 📱 Telegram: [@justozodbek](https://t.me/justozodbek)
+> ✨ A modern, responsive, and creative website built with love and clean code.
 
 ---
-⭐ Agar dastur sizga foydali bo'lsa, yulduzcha qo'yishni unutmang!
+
+## ⚡️ Features
+- 🚀 Fast & responsive  
+- 🎨 Clean design  
+- 🌙 Dark mode 
+- 🔧 Easy to customize  
+
+---
+
+## 🛠 Tech Stack
+HTML • CSS • JS
+
+---
+
+## 🚀 Run Locally
+```bash
+git clone https://github.com/username/project-name.git
+cd project-name
+npm install && npm run dev
