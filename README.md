@@ -1,4 +1,4 @@
-# 🌐 Project Name
+# 🌐 ScanHub
 
 ![Banner](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdW1tcnNnZXNpbjVycDVqeWJ1NHRoZmhkM2FicDFuY2FnNXVrMnMxNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OGCXiouwTpgVJok2s5/giphy.gif)
 
